@@ -1,8 +1,9 @@
 {
   "name": "vclutter",
   "displayName": "vClutter",
-  "description": "Koddaki yorum satırlarını temizler, boşlukları ve girintileri düzenleyerek kodu derleyip toplar.",
+  "description": "Intelligent code cleaner that removes redundant comments, optimizes indentation, and tidies up source code.",
   "version": "0.0.1",
+  "icon":"assets/icon.png",
   "publisher": "erogluyusuf",
   "repository": {
     "type": "git",
@@ -26,25 +27,25 @@
         "vclutter.keepTODOs": {
           "type": "boolean",
           "default": true,
-          "description": "TODO ve FIXME içeren yorum satırlarını koru."
+          "description": "Preserve comments containing TODO, FIXME, or HACK annotations."
         },
         "vclutter.autoFormat": {
           "type": "boolean",
           "default": true,
-          "description": "Temizlikten sonra otomatik formatla."
+          "description": "Automatically trigger the default formatter after cleaning."
         }
       }
     },
     "commands": [
       {
         "command": "vclutter.clean",
-        "title": "vClutter: Clean & Tidy Code",
+        "title": "vClutter: Clean & Tidy Current File",
         "category": "vClutter",
         "icon": "$(broom)"
       },
       {
         "command": "vclutter.batchClean",
-        "title": "vClutter: Sweep Folder (Klasörü Süpür)",
+        "title": "vClutter: Optimize Directory Content",
         "category": "vClutter"
       }
     ],

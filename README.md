@@ -66,6 +66,7 @@ If you don't want to deal with the source code, you can directly install the ext
 3. Go to the Extensions view (`Ctrl+Shift+X`).
 4. Click the "..." (three dots) in the top right corner.
 5. Select **Install from VSIX...** and choose the downloaded file.
+
 ### Build from Source
 
 ```bash

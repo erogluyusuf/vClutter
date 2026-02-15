@@ -28,7 +28,6 @@ const LANGUAGE_MAP: Record<string, LangProfile> = {
     shellscript:     { line: ["#"], block: [], string: true }, 
     powershell:      { line: ["#"], block: [{ start: "<#", end: "#>" }], string: true },
     batch:           { line: ["REM", "::"], block: [], string: false }, 
-
     java:            { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true },
     rust:            { line: ["//", "///"], block: [{ start: "/*", end: "*/" }], string: true },
     go:              { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true },
@@ -51,7 +50,6 @@ const LANGUAGE_MAP: Record<string, LangProfile> = {
 };
 
 
-// Parametreye keepTODOs: boolean ekledik (varsayılan false)
 export function cleanCodeStack(code: string, languageId: string, keepTODOs: boolean = false): string {
     const profile = LANGUAGE_MAP[languageId] || { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true };
     const input = code.split("");
@@ -63,7 +61,6 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
     let activeBlock: BlockRule | null = null;
 
     while (i < input.length) {
-        // --- BLOK YORUM (PYTHONDAN """ """ VEYA JS /* */) KONTROLÜ ---
         if (activeBlock) {
             let matchEnd = true;
             for (let k = 0; k < activeBlock.end.length; k++) {
@@ -79,14 +76,12 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
             } else {
                 // EĞER TODO KORUMASI VARSA: Blok içindeki karakterleri silmek yerine koru
                 // Ama genellikle blok yorumun tamamı TODO içeriyorsa bloğu bırakmak gerekir.
-                // Şimdilik blok yorumları komple atlıyoruz.
                 i++;
             }
             continue;
         }
 
         if (!inString) {
-            // Blok Başlangıç Kontrolü
             let foundBlock = false;
             for (const marker of profile.block) {
                 let matchStart = true;
@@ -98,7 +93,6 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
                 }
 
                 if (matchStart) {
-                    // TODO Koruması: Bloğun sonuna kadar tara, içinde TODO var mı bak
                     if (keepTODOs) {
                         let blockEndIndex = -1;
                         for (let j = i + marker.start.length; j < input.length; j++) {
@@ -117,8 +111,8 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
 
                         if (blockEndIndex !== -1) {
                             const blockContent = input.slice(i, blockEndIndex).join("");
-                            if (blockContent.includes("TODO") || blockContent.includes("FIXME")) {
-                                // TODO bulduk! Bu bloğu silme, normal metin gibi işle
+                            if (blockContent.includes("TODO") || blockContent.includes("FIXME") || blockContent.includes("HACK")) {
+
                                 foundBlock = false; 
                                 break; 
                             }
@@ -133,7 +127,7 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
             }
             if (foundBlock) continue;
 
-            // --- TEK SATIRLI YORUM KONTROLÜ ---
+
             let foundLine = false;
             for (const marker of profile.line) {
                 let match = true;
@@ -164,11 +158,11 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
             if (foundLine) continue;
         }
 
-        // --- STRİNG VE KARAKTER EKLEME ---
+
         const char = input[i];
         if (profile.string) {
             if (!inString) {
-                if (char === '"' || char === "'" || char === "`") { // Backtick desteği eklendi
+                if (char === '"' || char === "'" || char === "`") { 
                     inString = true;
                     quoteChar = char;
                     output.push(char);
@@ -223,26 +217,24 @@ export function fixIndentation(code: string, tabSize: number = 4): string {
     for (let line of lines) {
         let trimmedLine = line.trim();
         
-        // Eğer satır kapanış parantezi ile başlıyorsa, bu satırın girintisini hemen düşür
+
         if (trimmedLine.startsWith("}") || trimmedLine.startsWith("]") || trimmedLine.startsWith(")")) {
             indentLevel = Math.max(0, indentLevel - 1);
         }
 
-        // Mevcut girintiyi uygula
+
         const currentIndent = " ".repeat(indentLevel * tabSize);
         result.push(trimmedLine.length > 0 ? currentIndent + trimmedLine : "");
 
-        // Eğer satırın içinde açılış parantezi varsa (ve kapanışla bitmiyorsa), bir sonraki satır için artır
-        // Not: Bu basit bir mantıktır, satır içi parantez sayısını sayar
+
         const openBraces = (trimmedLine.match(/[\{\[\(]/g) || []).length;
         const closeBraces = (trimmedLine.match(/[\}\]\)]/g) || []).length;
         
-        // Sadece bu satırda kapanmamış parantezler varsa derinliği artır
+
         if (!trimmedLine.startsWith("}") && !trimmedLine.startsWith("]") && !trimmedLine.startsWith(")")) {
              indentLevel += (openBraces - closeBraces);
         }
         
-        // Seviyenin negatif olmamasını sağla
         indentLevel = Math.max(0, indentLevel);
     }
 

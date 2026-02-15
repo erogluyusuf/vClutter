@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import { cleanCodeStack, fixIndentation } from "../utils/commentEngine";
-
 export async function cleanCodeCommand(context: vscode.ExtensionContext) {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -13,18 +12,18 @@ export async function cleanCodeCommand(context: vscode.ExtensionContext) {
     const languageId = document.languageId;
     const config = vscode.workspace.getConfiguration("vclutter");
 
-    // 1. Ayarları Oku
+
     const keepTODOs = config.get<boolean>("keepTODOs", true);
     const autoFormat = config.get<boolean>("autoFormat", true);
 
-    // 2. Metni Belirle (Seçim varsa sadece orayı, yoksa tamamını al)
+
     const isSelection = !selection.isEmpty;
     const rawText = isSelection ? document.getText(selection) : document.getText();
 
-    // 3. Yorumları Temizle (keepTODOs parametresini gönderiyoruz)
+
     let processedText = cleanCodeStack(rawText, languageId, keepTODOs);
 
-    // 4. Manuel Indent Fixer (Sadece parantezli diller için)
+
     const bracketLanguages = [
         "javascript", "typescript", "javascriptreact", "typescriptreact", 
         "csharp", "java", "c", "cpp", "css", "json", "rust", "go", "swift"
@@ -35,13 +34,13 @@ export async function cleanCodeCommand(context: vscode.ExtensionContext) {
         processedText = fixIndentation(processedText, tabSize);
     }
 
-    // Değişiklik kontrolü
+
     if (processedText === rawText) {
         vscode.window.showInformationMessage("Seçilen alanda temizlenecek bir şey bulunamadı!");
         return;
     }
 
-    // 5. Dosyayı Güncelle
+
     const edit = new vscode.WorkspaceEdit();
     const range = isSelection 
         ? new vscode.Range(selection.start, selection.end)
@@ -53,7 +52,7 @@ export async function cleanCodeCommand(context: vscode.ExtensionContext) {
     if (success) {
         if (autoFormat) {
             try {
-                // 6. Formatlayıcıyı Tetikle
+
                 await vscode.commands.executeCommand("editor.action.formatDocument");
                 vscode.window.setStatusBarMessage("vClutter: Temizlendi ve Formatlandı!", 3000);
             } catch (e) {
