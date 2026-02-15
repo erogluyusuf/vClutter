@@ -1,0 +1,88 @@
+{
+  "name": "vclutter",
+  "displayName": "vClutter",
+  "description": "Koddaki yorum satırlarını temizler, boşlukları ve girintileri düzenleyerek kodu derleyip toplar.",
+  "version": "0.0.1",
+  "publisher": "erogluyusuf",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/erogluyusuf/vClutter"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "vClutter",
+      "properties": {
+        "vclutter.keepTODOs": {
+          "type": "boolean",
+          "default": true,
+          "description": "TODO ve FIXME içeren yorum satırlarını koru."
+        },
+        "vclutter.autoFormat": {
+          "type": "boolean",
+          "default": true,
+          "description": "Temizlikten sonra otomatik formatla."
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "vclutter.clean",
+        "title": "vClutter: Clean & Tidy Code",
+        "category": "vClutter",
+        "icon": "$(broom)"
+      },
+      {
+        "command": "vclutter.batchClean",
+        "title": "vClutter: Sweep Folder (Klasörü Süpür)",
+        "category": "vClutter"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "vclutter.clean",
+          "group": "modification",
+          "when": "editorTextFocus"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "vclutter.batchClean",
+          "group": "modification",
+          "when": "explorerResourceIsFolder"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "20.x",
+    "@types/prettier": "^2.7.3",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.1",
+    "@typescript-eslint/parser": "^6.19.1",
+    "@vscode/test-electron": "^2.3.9",
+    "eslint": "^8.56.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.3.3"
+  }
+}
