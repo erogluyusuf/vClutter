@@ -59,7 +59,13 @@ vClutter can be fully customized to match your workflow:
 ---
 
 ## 📦 Installation
-
+## 🚀 Quick Install (VSIX)
+If you don't want to deal with the source code, you can directly install the extension:
+1. Download the `vclutter-0.0.1.vsix` file from this repository.
+2. Open VS Code.
+3. Go to the Extensions view (`Ctrl+Shift+X`).
+4. Click the "..." (three dots) in the top right corner.
+5. Select **Install from VSIX...** and choose the downloaded file.
 ### Build from Source
 
 ```bash

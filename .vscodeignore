@@ -1,0 +1,10 @@
+.vscode/**
+.vscode-test/**
+.github/**
+.vclutter_env/**
+src/**
+tsconfig.json
+install.sh
+test.py
+.gitignore
+.gitkeep
