@@ -3,6 +3,8 @@
 ![Project Status](https://img.shields.io/badge/Status-Stable-success)
 ![Platform](https://img.shields.io/badge/Platform-Visual%20Studio%20Code-blue)
 ![License](https://img.shields.io/badge/License-MIT-purple)
+[![Marketplace](https://img.shields.io/visual-studio-marketplace/v/erogluyusuf.vclutter?label=VS%20Code%20Marketplace&color=orange)](https://marketplace.visualstudio.com/items?itemName=erogluyusuf.vclutter)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/erogluyusuf.vclutter)](https://marketplace.visualstudio.com/items?itemName=erogluyusuf.vclutter)
 
 vClutter is a high-performance **Visual Studio Code extension** designed to clean up complex source code, remove non-documentation comments, and optimize code structural integrity (indentation). It supports a wide range of cleanup operations, from single selections to entire project directories, increasing developer productivity.
 
