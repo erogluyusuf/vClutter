@@ -34,4 +34,5 @@
         "start": ""
     }], "string": false },
     "plaintext":       { "line": ["#"], "block": [], "string": false },
-    "latex":           { "line": ["%"], "block": [], "string": false }
+    "latex":           { "line": ["%"], "block": [], "string": false },
+    "gitignore":       { "line": ["#"], "block": [], "string": false }
