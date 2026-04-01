@@ -35,5 +35,5 @@
     }], "string": false },
     "plaintext":       { "line": ["#"], "block": [], "string": false },
     "latex":           { "line": ["%"], "block": [], "string": false },
-    "gitignore":       { "line": ["#"], "block": [], "string": false },
+    "ignore":       { "line": ["#"], "block": [], "string": false },
     "terraform":       { "line": ["#", "//"], "block": [{ "start": "/*", "end": "*/" }], "string": true }
