@@ -8,9 +8,9 @@ vClutter is a high-performance **Visual Studio Code extension** designed to clea
 
 ---
 
-## 🛠 Features
+##  Features
 
-### 🧹 Smart Comment Stripping (Context-Aware)
+###  Smart Comment Stripping (Context-Aware)
 
 vClutter is more than a simple text cleaner; it understands code semantics:
 
@@ -18,14 +18,14 @@ vClutter is more than a simple text cleaner; it understands code semantics:
 - **String Protection:** Characters inside quotes (`"`, `'`, `` ` ``) are treated as part of the code and never removed.
 - **Hybrid Cleaning:** Successfully removes both single-line (`//`, `#`, `;`) and block comments (`/* */`, `""" """`, ```` `` ````).
 
-### 🛡 Critical Note Protection (TODO/FIXME Preservation)
+###  Critical Note Protection (TODO/FIXME Preservation)
 
 Important development notes are never lost:
 
 - **Advanced Filtering:** Automatically detects and preserves comments containing `TODO`, `FIXME`, or `HACK`.
 - **Configurable:** This protection mechanism can be disabled according to user preferences.
 
-### 📏 Dynamic Indentation Optimization (Indent Fixer)
+###  Dynamic Indentation Optimization (Indent Fixer)
 
 Organizes the visual hierarchy of code without the need for external formatters (Prettier/ESLint, etc.):
 
@@ -34,7 +34,7 @@ Organizes the visual hierarchy of code without the need for external formatters 
 
 ---
 
-## 🚀 Usage Scenarios
+##  Usage Scenarios
 
 1. **Partial Clean**  
    Right-click a selected code block in the editor or use the command palette to clean only that area.
@@ -47,7 +47,7 @@ Organizes the visual hierarchy of code without the need for external formatters 
 
 ---
 
-## ⚙️ Settings
+##  Settings
 
 vClutter can be fully customized to match your workflow:
 
@@ -58,8 +58,8 @@ vClutter can be fully customized to match your workflow:
 
 ---
 
-## 📦 Installation
-## 🚀 Quick Install (VSIX)
+##  Installation
+##  Quick Install (VSIX)
 If you don't want to deal with the source code, you can directly install the extension:
 1. Download the `vclutter-0.0.1.vsix` file from this repository.
 2. Open VS Code.
@@ -75,15 +75,15 @@ cd vClutter
 npm install
 npm run compile
 ```
-## ⚖️ Disclaimer
+##  Disclaimer
 
 vClutter is designed for visual code cleanup. Make sure `keepTODOs` is enabled before removing important documentation comments. The developer is not responsible for any data loss resulting from the use of this software.
 
-## 🤝 Contribution
+##  Contribution
 
 Pull requests are welcome. For major changes, please open an **issue** first to discuss what you plan to modify.
 
-## 📜 License
+##  License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
