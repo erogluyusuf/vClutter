@@ -30,7 +30,7 @@
     "sql":             { "line": ["--"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
     "dockerfile":      { "line": ["#"], "block": [], "string": true },
     "makefile":        { "line": ["#"], "block": [], "string": false },
-    "markdown":        { "line": [], "block": [{
+    "markdown":        { "line": [#], "block": [{
         "start": ""
     }], "string": false },
     "plaintext":       { "line": ["#"], "block": [], "string": false },
