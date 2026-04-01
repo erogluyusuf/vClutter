@@ -1,6 +1,19 @@
 node_modules/
 out/
+dist/
 .vscode-test/
 *.vsix
 .DS_Store
-vsc-extension-quickstart.md
+User/
+Cache/
+GPUCache/
+Code Cache/
+DawnGraphiteCache/
+DawnWebGPUCache/
+Dictionaries/
+logs/
+Code.lock
+Crashpad/
+Local Storage/
+Network Persistent State/
+blob_storage/

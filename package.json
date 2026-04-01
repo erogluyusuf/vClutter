@@ -2,7 +2,7 @@
   "name": "vclutter",
   "displayName": "vClutter",
   "description": "Intelligent code cleaner that removes redundant comments, optimizes indentation, and tidies up source code.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icon":"assets/icon.png",
   "publisher": "erogluyusuf",
   "repository": {

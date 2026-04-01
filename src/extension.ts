@@ -1,11 +1,12 @@
 import * as vscode from "vscode";
 import { cleanCodeCommand } from "./commands/cleanCode";
 import { batchCleanCommand } from "./commands/batchClean"; 
+import { syncLanguageMap } from './utils/commentEngine';
 
 let myStatusBarItem: vscode.StatusBarItem;
 
-export function activate(context: vscode.ExtensionContext) {
-
+export async function activate(context: vscode.ExtensionContext) {
+    syncLanguageMap(context);
     const cleanCommand = vscode.commands.registerCommand('vclutter.clean', () => {
         cleanCodeCommand(context);
     });

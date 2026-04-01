@@ -1,12 +1,14 @@
-type BlockRule = { start: string; end: string };
+import * as vscode from 'vscode';
 
-interface LangProfile {
-    line: string[]; 
-    block: BlockRule[]; 
-    string: boolean; 
+export type BlockRule = { start: string; end: string };
+
+export interface LangProfile {
+    line: string[];
+    block: BlockRule[];
+    string: boolean;
 }
 
-const LANGUAGE_MAP: Record<string, LangProfile> = {
+const FALLBACK_MAP: Record<string, LangProfile> = {
     javascript:      { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true },
     typescript:      { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true },
     javascriptreact: { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true },
@@ -45,13 +47,51 @@ const LANGUAGE_MAP: Record<string, LangProfile> = {
         start: "<!--",
         end: "-->"
     }], string: false },
-    plaintext:       { line: [], block: [], string: false },
+    plaintext:       { line: ["#"], block: [], string: false },
     latex:           { line: ["%"], block: [], string: false }
 };
 
+// Aktif harita başlangıçta yedeklerle dolar
+let ACTIVE_LANGUAGE_MAP: Record<string, LangProfile> = FALLBACK_MAP;
 
+const GITHUB_CONFIG_URL = "https://raw.githubusercontent.com/erogluyusuf/vClutter/main/languages.json";
+
+/**
+ * GitHub'dan güncel dil haritasını çeker ve yerel belleğe (cache) kaydeder.
+ */
+export async function syncLanguageMap(context: vscode.ExtensionContext) {
+    try {
+        // Önce daha önce kaydedilmiş bir cache varsa onu yükle (Hızlı başlatma için)
+        const cachedMap = context.globalState.get<Record<string, LangProfile>>('vclutter_remote_map');
+        if (cachedMap) {
+            ACTIVE_LANGUAGE_MAP = { ...FALLBACK_MAP, ...cachedMap };
+        }
+
+        // GitHub'dan yeni veriyi çek
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 saniye timeout
+
+        const response = await fetch(GITHUB_CONFIG_URL, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (response.ok) {
+            const remoteData = await response.json() as Record<string, LangProfile>;
+            ACTIVE_LANGUAGE_MAP = { ...FALLBACK_MAP, ...remoteData };
+            
+            // Gelecek sefer için cache'e yaz
+            await context.globalState.update('vclutter_remote_map', remoteData);
+            console.log("vClutter: Dil haritası GitHub'dan güncellendi.");
+        }
+    } catch (error) {
+        console.warn("vClutter: Güncelleme sunucusuna ulaşılamadı, yerel/cache veriler kullanılıyor.");
+    }
+}
+
+/**
+ * Kodu yorum satırlarından arındıran ana fonksiyon
+ */
 export function cleanCodeStack(code: string, languageId: string, keepTODOs: boolean = false): string {
-    const profile = LANGUAGE_MAP[languageId] || { line: ["//"], block: [{ start: "/*", end: "*/" }], string: true };
+    const profile = ACTIVE_LANGUAGE_MAP[languageId] || FALLBACK_MAP["javascript"];
     const input = code.split("");
     const output: string[] = [];
     let i = 0;
@@ -61,6 +101,7 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
     let activeBlock: BlockRule | null = null;
 
     while (i < input.length) {
+        // 1. BLOK YORUM KONTROLÜ
         if (activeBlock) {
             let matchEnd = true;
             for (let k = 0; k < activeBlock.end.length; k++) {
@@ -69,19 +110,17 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
                     break;
                 }
             }
-
             if (matchEnd) {
                 i += activeBlock.end.length;
                 activeBlock = null;
             } else {
-                // EĞER TODO KORUMASI VARSA: Blok içindeki karakterleri silmek yerine koru
-                // Ama genellikle blok yorumun tamamı TODO içeriyorsa bloğu bırakmak gerekir.
                 i++;
             }
             continue;
         }
 
         if (!inString) {
+            // 2. BLOK BAŞLANGIÇ KONTROLÜ
             let foundBlock = false;
             for (const marker of profile.block) {
                 let matchStart = true;
@@ -108,17 +147,15 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
                                 break;
                             }
                         }
-
                         if (blockEndIndex !== -1) {
                             const blockContent = input.slice(i, blockEndIndex).join("");
-                            if (blockContent.includes("TODO") || blockContent.includes("FIXME") || blockContent.includes("HACK")) {
-
+                            const lowerContent = blockContent.toLowerCase();
+                            if (lowerContent.includes("todo") || lowerContent.includes("fixme") || lowerContent.includes("hack")) {
                                 foundBlock = false; 
                                 break; 
                             }
                         }
                     }
-                    
                     activeBlock = marker;
                     i += marker.start.length;
                     foundBlock = true;
@@ -127,7 +164,7 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
             }
             if (foundBlock) continue;
 
-
+            // 3. SATIR YORUM KONTROLÜ
             let foundLine = false;
             for (const marker of profile.line) {
                 let match = true;
@@ -142,14 +179,12 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
                     if (keepTODOs) {
                         let lineEnd = i;
                         while (lineEnd < input.length && input[lineEnd] !== "\n") lineEnd++;
-                        const currentLineText = input.slice(i, lineEnd).join("");
-
-                        if (currentLineText.includes("TODO") || currentLineText.includes("FIXME")) {
+                        const lineText = input.slice(i, lineEnd).join("").toLowerCase();
+                        if (lineText.includes("todo") || lineText.includes("fixme")) {
                             match = false; 
                             break; 
                         }
                     }
-
                     while (i < input.length && input[i] !== "\n") i++;
                     foundLine = true;
                     break;
@@ -158,7 +193,7 @@ export function cleanCodeStack(code: string, languageId: string, keepTODOs: bool
             if (foundLine) continue;
         }
 
-
+        // 4. STRING (METİN) KORUMASI
         const char = input[i];
         if (profile.string) {
             if (!inString) {
@@ -209,6 +244,10 @@ function normalizeEmptyLines(text: string): string {
     }
     return result.join("\n").trim() + "\n";
 }
+
+/**
+ * Kodu doğru hizaya sokar (Kendi yazdığın orijinal fonksiyon)
+ */
 export function fixIndentation(code: string, tabSize: number = 4): string {
     const lines = code.split("\n");
     let indentLevel = 0;
@@ -216,20 +255,16 @@ export function fixIndentation(code: string, tabSize: number = 4): string {
 
     for (let line of lines) {
         let trimmedLine = line.trim();
-        
 
         if (trimmedLine.startsWith("}") || trimmedLine.startsWith("]") || trimmedLine.startsWith(")")) {
             indentLevel = Math.max(0, indentLevel - 1);
         }
 
-
         const currentIndent = " ".repeat(indentLevel * tabSize);
         result.push(trimmedLine.length > 0 ? currentIndent + trimmedLine : "");
 
-
         const openBraces = (trimmedLine.match(/[\{\[\(]/g) || []).length;
         const closeBraces = (trimmedLine.match(/[\}\]\)]/g) || []).length;
-        
 
         if (!trimmedLine.startsWith("}") && !trimmedLine.startsWith("]") && !trimmedLine.startsWith(")")) {
              indentLevel += (openBraces - closeBraces);

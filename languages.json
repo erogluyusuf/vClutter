@@ -1,0 +1,37 @@
+"javascript":      { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "typescript":      { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "javascriptreact": { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "typescriptreact": { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "python":          { "line": ["#"], "block": [{ "start": '"""', "end": '"""' }, { "start": "'''", "end": "'''" }], "string": true },
+    "html":            { "line": [], "block": [{
+        "start": ""
+    }], "string": false }, 
+    "xml":             { "line": [], "block": [{
+        "start": ""
+    }], "string": false }, 
+    "css":             { "line": ["/*"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "csharp":          { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "php":             { "line": ["//", "#"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "c":               { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "cpp":             { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "shellscript":     { "line": ["#"], "block": [], "string": true }, 
+    "powershell":      { "line": ["#"], "block": [{ "start": "<#", "end": "#>" }], "string": true },
+    "batch":           { "line": ["REM", "::"], "block": [], "string": false }, 
+    "java":            { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "rust":            { "line": ["//", "///"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "go":              { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "swift":           { "line": ["//"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "ruby":            { "line": ["#"], "block": [{ "start": "=begin", "end": "=end" }], "string": true },
+    "asm":             { "line": [";"], "block": [], "string": true },
+    "nasm":            { "line": [";"], "block": [], "string": true },
+    "yaml":            { "line": ["#"], "block": [], "string": true },
+    "toml":            { "line": ["#"], "block": [], "string": true },
+    "json":            { "line": [], "block": [], "string": true }, 
+    "sql":             { "line": ["--"], "block": [{ "start": "/*", "end": "*/" }], "string": true },
+    "dockerfile":      { "line": ["#"], "block": [], "string": true },
+    "makefile":        { "line": ["#"], "block": [], "string": false },
+    "markdown":        { "line": [], "block": [{
+        "start": ""
+    }], "string": false },
+    "plaintext":       { "line": ["#"], "block": [], "string": false },
+    "latex":           { "line": ["%"], "block": [], "string": false }
