@@ -31,7 +31,7 @@ Organizes the visual hierarchy of code without the need for external formatters 
 
 - **Bracket-Based Alignment:** Automatically aligns indentation based on bracket depth for C-style languages.
 - **Zero-Dependency:** Ensures readability even if VS Code’s built-in formatter is not installed.
-
+ 
 ---
 
 ##  Usage Scenarios
