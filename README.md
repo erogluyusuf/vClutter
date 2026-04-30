@@ -9,7 +9,7 @@ vClutter is a high-performance **Visual Studio Code extension** designed to clea
 ---
 
 ##  Features
-
+ 
 ###  Smart Comment Stripping (Context-Aware)
 
 vClutter is more than a simple text cleaner; it understands code semantics:
